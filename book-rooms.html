@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Room - Hotel Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        .room-option {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+        }
+        .room-option h2 {
+            margin-top: 0;
+        }
+        .book-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .book-btn:hover {
+            background-color: #45a049;
+        }
+        .back-link {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Choose Your Room</h1>
+
+    <div id="roomOptions">
+        <!-- Room options will be displayed here -->
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <p class="back-link"><a href="index.html">Back to Home</a></p>
+
+    <script>
+        // Check if user is logged in
+        if(localStorage.getItem("isLoggedIn") !== "true") {
+            alert("You must log in to book a room.");
+            window.location.href = "login.html";
+        }
+
+        // Logout functionality
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+            alert("You have logged out successfully!");
+            window.location.href = "index.html"; // Redirect to homepage after logout
+        });
+
+        // Room options with pricing
+        const rooms = [
+            { id: 1, name: "Deluxe King Suite", price: 150, description: "A spacious king suite with a stunning view." },
+            { id: 2, name: "Standard Double Room", price: 100, description: "A comfortable room with two double beds." },
+            { id: 3, name: "Single Room", price: 70, description: "Perfect for solo travelers." }
+        ];
+
+        // Display room options
+        const roomOptionsContainer = document.getElementById("roomOptions");
+        rooms.forEach(room => {
+            const roomElement = document.createElement("div");
+            roomElement.classList.add("room-option");
+            roomElement.innerHTML = `
+                <h2>${room.name}</h2>
+                <p>${room.description}</p>
+                <p><strong>Price: $${room.price} per night</strong></p>
+                <button class="book-btn" onclick="bookRoom(${room.id}, '${room.name}', ${room.price})">Book This Room</button>
+            `;
+            roomOptionsContainer.appendChild(roomElement);
+        });
+
+        // Function to handle room booking
+        function bookRoom(id, name, price) {
+            const userName = localStorage.getItem("username"); // Get the logged-in username
+
+            // Prepare the booking data
+            const booking = {
+                roomId: id,
+                roomName: name,
+                price: price,
+                bookedBy: userName,
+                bookingDate: new Date().toISOString()
+            };
+
+            // Get current bookings from localStorage, or initialize an empty array
+            let bookedRooms = JSON.parse(localStorage.getItem("bookedRooms")) || [];
+            
+            // Add the new booking to the array
+            bookedRooms.push(booking);
+
+            // Save the updated booked rooms to localStorage
+            localStorage.setItem("bookedRooms", JSON.stringify(bookedRooms));
+
+            // Redirect to the booked rooms page
+            alert("Room booked successfully!");
+            window.location.href = "booked-rooms.html";
+        }
+    </script>
+
+</body>
+</html>

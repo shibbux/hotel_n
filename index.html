@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Website - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #45a049;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to Our Hotel</h1>
+    <p>Your perfect stay starts here.</p>
+
+    <div id="userStatus">
+        <!-- User status will be updated with JS -->
+    </div>
+
+    <div class="button-container">
+        <a href="login.html" class="btn" id="loginBtn">Login</a>
+        <a href="signup.html" class="btn" id="signupBtn">Signup</a>
+        <a href="index.html" class="btn" id="logoutBtn" style="display:none;">Logout</a>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if(localStorage.getItem("isLoggedIn") === "true") {
+            document.getElementById("userStatus").innerHTML = "<p>You are logged in!</p><a href='book-rooms.html' class='btn'>Book a Room</a><br><a href='booked-rooms.html' class='btn'>View Booked Rooms</a>";
+            document.getElementById("loginBtn").style.display = "none"; // Hide login button
+            document.getElementById("signupBtn").style.display = "none"; // Hide signup button
+            document.getElementById("logoutBtn").style.display = "inline-block"; // Show logout button
+        }
+
+        // Logout functionality
+        document.getElementById("logoutBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+            alert("You have logged out successfully!");
+            window.location.href = "index.html"; // Redirect to homepage after logout
+        });
+    </script>
+
+</body>
+</html>

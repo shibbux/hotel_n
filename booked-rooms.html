@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booked Rooms - Hotel Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .room-list {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .room-item {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .room-item p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Booked Rooms</h1>
+
+    <div id="bookedRooms">
+        <!-- Booked rooms will be displayed here -->
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <p class="back-link"><a href="index.html">Back to Home</a></p>
+
+    <script>
+        // Check if user is logged in
+        if(localStorage.getItem("isLoggedIn") !== "true") {
+            alert("You must log in to view booked rooms.");
+            window.location.href = "login.html";
+        }
+
+        // Logout functionality
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+            alert("You have logged out successfully!");
+            window.location.href = "index.html"; // Redirect to homepage after logout
+        });
+
+        // Retrieve booked rooms from localStorage
+        const bookedRooms = JSON.parse(localStorage.getItem("bookedRooms")) || [];
+
+        const bookedRoomsContainer = document.getElementById("bookedRooms");
+
+        if (bookedRooms.length === 0) {
+            bookedRoomsContainer.innerHTML = "<p>You have not booked any rooms yet.</p>";
+        } else {
+            bookedRooms.forEach(room => {
+                const roomElement = document.createElement("div");
+                roomElement.classList.add("room-item");
+                roomElement.innerHTML = `
+                    <p><strong>Room: ${room.roomName}</strong></p>
+                    <p>Booked by: ${room.bookedBy}</p>
+                    <p>Price: $${room.price} per night</p>
+                    <p>Booking Date: ${new Date(room.bookingDate).toLocaleDateString()}</p>
+                `;
+                bookedRoomsContainer.appendChild(roomElement);
+            });
+        }
+    </script>
+
+</body>
+</html>
